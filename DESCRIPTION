@@ -6,7 +6,7 @@ Maintainer:  Massimiliano Culpo
 Title: FEM Plotting
 Description: Collection of routines to plot data on unstructured triangular and tetrahedral meshes
 Categories:  Graphics
-Depends:     Octave ( >= 2.9.12 )
+Depends:     octave ( >= 2.9.12 )
 Autoload: NO
 Url: http://www.comson.org/dem
 License: GNU/GPL 
