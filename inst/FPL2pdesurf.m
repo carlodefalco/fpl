@@ -1,23 +1,23 @@
-function FPL2pdesurf(varargin); 
+function FPL2pdesurf(varargin)
 
-  %% -*- texinfo -*-
-  %% @deftypefn {Function File} {} FPL2pdesurf (@var{mesh}, @
-  %% @var{u} [ @var{property}, @var{value} ...])
-  %% 
-  %% plots the scalar field @var{u}
-  %% defined on the triangulation @var{mesh} using opendx.
-  %%
-  %% options (default value):
-  %% @itemize @minus
-  %% @item data_dep ("positions") defines wether data depends on
-  %% positions or connections
-  %% @item plot_field ("scalar") defines wether to plot the scalar field
-  %% itself or its gradient
-  %% @end itemize
-  %%
-  %% @seealso{MSH2Mgmsh, MSH2Mstructmesh}
-  %% @end deftypefn
-
+  ## -*- texinfo -*-
+  ## @deftypefn {Function File} {} FPL2pdesurf (@var{mesh}, @
+  ## @var{u} [ @var{property}, @var{value} ...])
+  ## 
+  ## plots the scalar field @var{u}
+  ## defined on the triangulation @var{mesh} using opendx.
+  ##
+  ## options (default value):
+  ## @itemize @minus
+  ## @item data_dep ("positions") defines wether data depends on
+  ## positions or connections
+  ## @item plot_field ("scalar") defines wether to plot the scalar field
+  ## itself or its gradient
+  ## @end itemize
+  ##
+  ## @seealso{MSH2Mgmsh, MSH2Mstructmesh}
+  ## @end deftypefn
+  
   ## This file is part of 
   ##
   ##            FPL
@@ -55,7 +55,7 @@ function FPL2pdesurf(varargin);
     endfor
   else  
     keyboard ,error(["wrong number of parameters " num2str (nargin)])
-  end
+  endif
 
   dataname = mktemp("/tmp",".dx");
   scriptname = mktemp("/tmp",".net");
@@ -69,7 +69,7 @@ function FPL2pdesurf(varargin);
       showmesh = file_in_path(path,"FPL2coloredgradient.net");
     otherwise
       error ([ "incorrect value " plot_field " for option plot_field "])
-  end
+  endswitch
 
   system (["cp " showmesh " " scriptname]);
   system (["sed -i \'s|__FILE__DX__|" dataname "|g\' " scriptname]);
@@ -81,12 +81,12 @@ function FPL2pdesurf(varargin);
       system (["sed -i \'s|__DATA_DEPENDENCY__|positions|g\' " scriptname]);
     otherwise 
       error ([ "incorrect value " data_dep " for option data_dep "])
-  end
+  endswitch
 
-  command = ["dx -noConfirmedQuit  -noImageRWNetFile -program " scriptname " -execute -image  >& /dev/null & "];
-
+  ##command = ["dx -noConfirmedQuit  -noImageRWNetFile -program " scriptname " -execute -image  >& /dev/null & "];
+  command  = ["dx -noConfirmedQuit  -program " scriptname " -execute -image  >& /dev/null & "];
+  
   system(command);
-
 
 endfunction 
 
@@ -94,7 +94,7 @@ function filename = mktemp (direct,ext);
 
   if (~exist(direct,"dir"))
     error("trying to save temporary file to non existing directory")
-  end
+  endif
 
   done=false;
 
@@ -102,6 +102,7 @@ function filename = mktemp (direct,ext);
     filename = [direct,"/FPL.",num2str(floor(rand*1e7)),ext];
     if ~exist(filename,"file")
       done =true;
-    end
-  end
+    endif
+  endwhile
+  
 endfunction

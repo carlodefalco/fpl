@@ -59,29 +59,25 @@ function FPL2dxappenddata(filename,p,t,u,attr_name,attr_rank,attr_shape,endfile)
 
   if ((attr_rank==0) & (min(size(u))==1))
     fprintf(fid,'object "%s.data"\nclass array type double rank 0 items %d data follows',attr_name,Nnodi);
-	    fprintf(fid,'\n %1.7e',u);
-		  else
-		    fprintf(fid,'object "%s.data"\nclass array type double rank %d shape %d items %d data follows', ...
-			    attr_name,attr_rank,attr_shape,Nnodi);
-		    for i=1:Nnodi
-		    fprintf(fid,'\n');
-		    fprintf(fid,'    %1.7e',u(i,:));
-			  end
-			  end
-			    fprintf(fid,['\nattribute "dep" string "positions"\n\n' ...
-					 'object "%s" class field\n'...
-					 'component "positions" value "pos"\n'...
-					 'component "connections" value "con"\n'...
-					 'component "data" value "%s.data"\n'],...
-				    attr_name,attr_name);
-
-			    if(endfile)
-			    fprintf(fid,'\nend\n');
-			  end
-
-			    fclose (fid);
-
-
-				% Last Revision:
-				% $Author$
-				% $Date$
+    fprintf(fid,'\n %1.7e',u);
+  else
+    fprintf(fid,'object "%s.data"\nclass array type double rank %d shape %d items %d data follows', ...
+            attr_name,attr_rank,attr_shape,Nnodi);
+    for i=1:Nnodi
+      fprintf(fid,'\n');
+      fprintf(fid,'    %1.7e',u(i,:));
+    end
+  end
+  fprintf(fid,['\nattribute "dep" string "positions"\n\n' ...
+               'object "%s" class field\n'...
+               'component "positions" value "pos"\n'...
+               'component "connections" value "con"\n'...
+               'component "data" value "%s.data"\n'],...
+          attr_name,attr_name);
+  
+  if(endfile)
+    fprintf(fid,'\nend\n');
+  end
+  
+  fclose (fid);
+  
