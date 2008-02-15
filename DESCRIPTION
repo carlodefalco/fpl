@@ -1,13 +1,12 @@
 Name: FPL
-Version: 0.0.4
-Date: 2007-12-05
+Version: 0.1.1
+Date: February 2008
 Author: Carlo de Falco and Massimiliano Culpo
 Maintainer:  Massimiliano Culpo
 Title: FEM Plotting
 Description: Collection of routines to plot data on unstructured triangular and tetrahedral meshes
 Categories:  Graphics
-Depends:     octave ( >= 2.9.12 )
+Depends:     Octave ( >= 3.0.0 )
 Autoload: NO
-Url: http://www.comson.org/dem
 License: GNU/GPL 
 SystemRequirements: dx ( >= 4.3.2), sed, bash
