@@ -4,6 +4,11 @@ Functions to save data in DX format
   FPL2dxoutputdata
   FPL2dxoutputtimeseries
 Functions to plot data              
-  FPL2showmesh
-  FPL2quiver
+  FPL2pdeshowmesh
+  FPL2ptcshowmesh
   FPL2pdesurf
+  FPL2ptcsurf
+  FPL2trspdesurf
+  FPL2trsptcsurf
+  FPL2pdequiver
+  FPL2ptcquiver
