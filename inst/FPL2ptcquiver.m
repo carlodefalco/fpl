@@ -1,36 +1,48 @@
+## Copyright (C) 2004-2008  Carlo de Falco, Massimiliano Culpo
+##
+##  This file is part of 
+##
+##                   FPL - Fem PLotting package for octave
+## 
+##  FPL is free software; you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation; either version 2 of the License, or
+##  (at your option) any later version.
+## 
+##  FPL is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+## 
+##  You should have received a copy of the GNU General Public License
+##  along with FPL; If not, see <http://www.gnu.org/licenses/>.
+##
+##
+##  AUTHORS:
+##  Carlo de Falco
+##  Dublin City University
+##  School of Mathemetical Sciences
+##  Ireland
+##
+##  Culpo Massimiliano
+##  Bergische Universitaet Wuppertal
+##  Fachbereich C - Mathematik und Naturwissenschaften
+##  Arbeitsgruppe fuer Angewandte MathematD-42119 Wuppertal  Gaussstr. 20 
+##  D-42119 Wuppertal, Germany
+
+## -*- texinfo -*-
+## @deftypefn {Function File} {} FPL2ptcquiver (@var{mesh1}, @var{color1}
+## @var{vx1}, @var{vy1}, [ @var{mesh2}, @var{color2}, @var{vx2}, @var{vy2} ...])
+## 
+## Plots the 2D vector fields @var{vx}, @var{vy} 
+## defined on the triangulations @var{mesh} using opendx.
+##
+##
+## @seealso{FPL2pdesurf, FPL2ptcsurf, FPL2pdequiver}
+## @end deftypefn
+
 function FPL2ptcquiver(varargin) 
-
-  ## -*- texinfo -*-
-  ## @deftypefn {Function File} {} FPL2ptcquiver (@var{mesh1}, @var{color1}
-  ## @var{vx1}, @var{vy1}, [ @var{mesh2}, @var{color2}, @var{vx2}, @var{vy2} ...])
-  ## 
-  ## Plots the 2D vector fields @var{vx}, @var{vy} 
-  ## defined on the triangulations @var{mesh} using opendx.
-  ##
-  ##
-  ## @seealso{FPL2pdesurf, FPL2ptcsurf, FPL2pdequiver}
-  ## @end deftypefn
-
-  ## This file is part of 
-  ##
-  ##            FPL
-  ##            Copyright (C) 2004-2008  Culpo Massimiliano
-  ##
-  ##
-  ##
-  ##  FPL is free software; you can redistribute it and/or modify
-  ##  it under the terms of the GNU General Public License as published by
-  ##  the Free Software Foundation; either version 2 of the License, or
-  ##  (at your option) any later version.
-  ##
-  ##  FPL is distributed in the hope that it will be useful,
-  ##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ##  GNU General Public License for more details.
-  ##
-  ##  You should have received a copy of the GNU General Public License
-  ##  along with FPL; If not, see <http://www.gnu.org/licenses/>.
-
+  
   colorlist = "";
   datalist  = "";
   
@@ -60,7 +72,7 @@ function filename = mktemp (direct,ext);
   
   if (~exist(direct,"dir"))
     error("trying to save temporary file to non existing directory")
-  end
+  endif
   
   done=false;
   
@@ -68,6 +80,7 @@ function filename = mktemp (direct,ext);
     filename = [direct,"/FPL.",num2str(floor(rand*1e7)),ext];
     if ~exist(filename,"file")
       done =true;
-    end
-  end
+    endif
+  endwhile
+
 endfunction

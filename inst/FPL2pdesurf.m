@@ -1,43 +1,54 @@
+## Copyright (C) 2004-2008  Carlo de Falco, Massimiliano Culpo
+##
+##  This file is part of 
+##
+##                   FPL - Fem PLotting package for octave
+## 
+##  FPL is free software; you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation; either version 2 of the License, or
+##  (at your option) any later version.
+## 
+##  FPL is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+## 
+##  You should have received a copy of the GNU General Public License
+##  along with FPL; If not, see <http://www.gnu.org/licenses/>.
+##
+##
+##  AUTHORS:
+##  Carlo de Falco
+##  Dublin City University
+##  School of Mathemetical Sciences
+##  Ireland
+##
+##  Culpo Massimiliano
+##  Bergische Universitaet Wuppertal
+##  Fachbereich C - Mathematik und Naturwissenschaften
+##  Arbeitsgruppe fuer Angewandte MathematD-42119 Wuppertal  Gaussstr. 20 
+##  D-42119 Wuppertal, Germany
+
+## -*- texinfo -*-
+## @deftypefn {Function File} {} FPL2pdesurf (@var{mesh}, @
+## @var{u} [ @var{property}, @var{value} ...])
+## 
+## plots the scalar field @var{u}
+## defined on the triangulation @var{mesh} using opendx.
+##
+## options (default value):
+## @itemize @minus
+## @item data_dep ("positions") defines wether data depends on
+## positions or connections
+## @item plot_field ("scalar") defines wether to plot the scalar field
+## itself or its gradient
+## @end itemize
+##
+## @seealso{MSH2Mgmsh, MSH2Mstructmesh}
+## @end deftypefn
+ 
 function FPL2pdesurf(varargin)
-
-  ## -*- texinfo -*-
-  ## @deftypefn {Function File} {} FPL2pdesurf (@var{mesh}, @
-  ## @var{u} [ @var{property}, @var{value} ...])
-  ## 
-  ## plots the scalar field @var{u}
-  ## defined on the triangulation @var{mesh} using opendx.
-  ##
-  ## options (default value):
-  ## @itemize @minus
-  ## @item data_dep ("positions") defines wether data depends on
-  ## positions or connections
-  ## @item plot_field ("scalar") defines wether to plot the scalar field
-  ## itself or its gradient
-  ## @end itemize
-  ##
-  ## @seealso{MSH2Mgmsh, MSH2Mstructmesh}
-  ## @end deftypefn
-  
-  ## This file is part of 
-  ##
-  ##            FPL
-  ##            Copyright (C) 2004-2007  Carlo de Falco
-  ##
-  ##
-  ##
-  ##  FPL is free software; you can redistribute it and/or modify
-  ##  it under the terms of the GNU General Public License as published by
-  ##  the Free Software Foundation; either version 2 of the License, or
-  ##  (at your option) any later version.
-  ##
-  ##  FPL is distributed in the hope that it will be useful,
-  ##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ##  GNU General Public License for more details.
-  ##
-  ##  You should have received a copy of the GNU General Public License
-  ##  along with FPL; If not, see <http://www.gnu.org/licenses/>.
-
 
   data_dep   = "positions";
   plot_field = "scalar";
