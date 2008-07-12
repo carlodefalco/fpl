@@ -1,38 +1,50 @@
+## Copyright (C) 2004-2008  Carlo de Falco, Massimiliano Culpo
+##
+##  This file is part of 
+##
+##                   FPL - Fem PLotting package for octave
+## 
+##  FPL is free software; you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation; either version 2 of the License, or
+##  (at your option) any later version.
+## 
+##  FPL is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+## 
+##  You should have received a copy of the GNU General Public License
+##  along with FPL; If not, see <http://www.gnu.org/licenses/>.
+##
+##
+##  AUTHORS:
+##  Carlo de Falco
+##  Dublin City University
+##  School of Mathemetical Sciences
+##  Ireland
+##
+##  Culpo Massimiliano
+##  Bergische Universitaet Wuppertal
+##  Fachbereich C - Mathematik und Naturwissenschaften
+##  Arbeitsgruppe fuer Angewandte MathematD-42119 Wuppertal  Gaussstr. 20 
+##  D-42119 Wuppertal, Germany
+
+## -*- texinfo -*-
+## @deftypefn {Function File} {} FPL2pdequiver (@var{mesh}, @
+## @var{vx}, @var{vy}, [ @var{property}, @var{value} ...])
+## 
+## Plots the 2D vector field @var{vx}, @var{vy} 
+## defined on the triangulation @var{mesh} using opendx.
+##
+## Options (default values):
+## @var{sample_density} (100)
+##
+## @seealso{FPL2pdesurf, FPL2ptcsurf, FPL2ptcquiver}
+## @end deftypefn
+
 function FPL2pdequiver(mesh,vecfieldx,vecfieldy,varargin); 
-
-  ## -*- texinfo -*-
-  ## @deftypefn {Function File} {} FPL2pdequiver (@var{mesh}, @
-  ## @var{vx}, @var{vy}, [ @var{property}, @var{value} ...])
-  ## 
-  ## Plots the 2D vector field @var{vx}, @var{vy} 
-  ## defined on the triangulation @var{mesh} using opendx.
-  ##
-  ## Options (default values):
-  ## @var{sample_density} (100)
-  ##
-  ## @seealso{FPL2pdesurf, FPL2ptcsurf, FPL2ptcquiver}
-  ## @end deftypefn
-
-  ## This file is part of 
-  ##
-  ##            FPL
-  ##            Copyright (C) 2004-2007  Carlo de Falco
-  ##
-  ##
-  ##
-  ##  FPL is free software; you can redistribute it and/or modify
-  ##  it under the terms of the GNU General Public License as published by
-  ##  the Free Software Foundation; either version 2 of the License, or
-  ##  (at your option) any later version.
-  ##
-  ##  FPL is distributed in the hope that it will be useful,
-  ##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ##  GNU General Public License for more details.
-  ##
-  ##  You should have received a copy of the GNU General Public License
-  ##  along with FPL; If not, see <http://www.gnu.org/licenses/>.
-
+  
   sample_density = "100";
 
   if( (nargin >= 3) && (rem(nargin,2)==1) )
@@ -42,7 +54,7 @@ function FPL2pdequiver(mesh,vecfieldx,vecfieldy,varargin);
     endfor
   else  
     error(["wrong number of parameters " num2str (nargin)])
-  end
+  endif
 
   JX = sum(vecfieldx,1)'/3;
   JY = sum(vecfieldy,1)'/3;
@@ -69,7 +81,7 @@ function filename = mktemp (direct,ext);
 
   if (~exist(direct,"dir"))
     error("trying to save temporary file to non existing directory")
-  end
+  endif
 
   done=false;
 
@@ -77,6 +89,7 @@ function filename = mktemp (direct,ext);
     filename = [direct,"/FPL.",num2str(floor(rand*1e7)),ext];
     if ~exist(filename,"file")
       done =true;
-    end
-  end
+    endif
+  endwhile
+
 endfunction
