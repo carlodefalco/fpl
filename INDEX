@@ -3,6 +3,8 @@ Functions to save data in DX format
   FPL2dxappenddata          
   FPL2dxoutputdata
   FPL2dxoutputtimeseries
+  FPL3dxoutputmesh
+  FPL3dxoutputfield
 Functions to plot data              
   FPL2pdeshowmesh
   FPL2ptcshowmesh
