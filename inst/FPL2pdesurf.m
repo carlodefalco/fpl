@@ -1,4 +1,4 @@
-## Copyright (C) 2004-2008  Carlo de Falco, Massimiliano Culpo
+## Copyright (C) 2004-2008,2009  Carlo de Falco, Massimiliano Culpo
 ##
 ##  This file is part of 
 ##
@@ -88,7 +88,7 @@ function FPL2pdesurf(varargin)
   switch data_dep
     case {"positions","continuous","interpolate","P1"}
       system (["sed -i \'s|__DATA_DEPENDENCY__|positions|g\' " scriptname]);
-    case {"positions","continuous","interpolate","P1"}
+    case {"connections","discontinuous","P0"}
       system (["sed -i \'s|__DATA_DEPENDENCY__|positions|g\' " scriptname]);
     otherwise 
       error ([ "incorrect value " data_dep " for option data_dep "])
@@ -117,3 +117,17 @@ function filename = mktemp (direct,ext);
   endwhile
   
 endfunction
+
+%!shared msh
+%!test
+%! msh.p = [0 0; 1 0; 1 1; 0 1].';
+%! msh.t = [1 2 3 1; 1 3 4 1].';
+%! msh.e = [1 2 0 0 1 0 1; 2 3 0 0 2 0 1; 3 4 0 0 3 0 1; 4 1 0 0 4 0 1].';
+%! u = [0 1].';
+%! FPL2pdesurf (msh, u, "data_dep", "connections");
+%! s = input ("do you see a square divided into two triangles with a diagonal red-to-blue gradient color (if you see an empty plot try ctrl-F)? (y/n): " ,"s");
+%! assert(s, "y")
+%!test
+%! v = [0 0 1 1].';
+%! FPL2pdesurf (msh, v);
+%! s = input ("do you see a square divided into two triangles with a vertical red-to-blue gradient color (if you see an empty plot try ctrl-F)? (y/n): " ,"s");

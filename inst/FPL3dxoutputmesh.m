@@ -1,4 +1,4 @@
-## Copyright (C) 2004-2008  Carlo de Falco, Massimiliano Culpo
+## Copyright (C) 2004-2008,2009  Carlo de Falco, Massimiliano Culpo
 ##
 ##  This file is part of 
 ##
@@ -84,3 +84,30 @@ function FPL3dxoutputmesh(filename,mesh)
   fclose (fid);
 
 endfunction
+
+%!test
+%! msh.p =[ 0   0   1   1   0   0   1   1
+%!	    0   1   0   1   0   1   0   1
+%!	    0   0   0   0   1   1   1   1];
+%! msh.e =[1   5   7   8   5   5   6   8   1   3   5   7
+%! 	   2   6   3   3   7   3   2   6   3   2   6   6
+%!         6   1   8   4   3   1   4   4   2   4   7   8
+%!         0   0   0   0   0   0   0   0   0   0   0   0
+%!         0   0   0   0   0   0   0   0   0   0   0   0
+%!         0   0   0   0   0   0   0   0   0   0   0   0
+%!         0   0   0   0   0   0   0   0   0   0   0   0
+%!         0   0   0   0   0   0   0   0   0   0   0   0
+%!         1   1   1   1   1   1   1   1   1   1   1   1
+%!         1   1   2   2   3   3   4   4   5   5   6   6];
+%! msh.t =[ 1   5   5   6   7   8
+%!          3   6   6   3   3   3
+%!          2   7   3   2   6   6
+%!          6   3   1   4   8   4
+%!          1   1   1   1   1   1];
+%! testfile = "object ""pos""\nclass array type float rank 1 shape 3 items 8 data follows\n    0.000000e+00    0.000000e+00    0.000000e+00\n    0.000000e+00    1.000000e+00    0.000000e+00\n    1.000000e+00    0.000000e+00    0.000000e+00\n    1.000000e+00    1.000000e+00    0.000000e+00\n    0.000000e+00    0.000000e+00    1.000000e+00\n    0.000000e+00    1.000000e+00    1.000000e+00\n    1.000000e+00    0.000000e+00    1.000000e+00\n    1.000000e+00    1.000000e+00    1.000000e+00\n\nobject ""con""\nclass array type int rank 1 shape 4 items 6 data follows\n      0      2      1      5\n      4      5      6      2\n      4      5      2      0\n      5      2      1      3\n      6      2      5      7\n      7      2      5      3\nattribute ""element type"" string ""tetrahedra""\nattribute ""ref"" string ""positions""\n\nobject ""themesh"" class field\ncomponent ""positions"" value ""pos""\ncomponent ""connections"" value ""con""\n\nend\n";
+%! FPL3dxoutputmesh ("__FPL3dxoutputmesh__test__.dx",msh);
+%! fid = fopen("__FPL3dxoutputmesh__test__.dx","r"); 
+%! s = fread(fid);
+%! fclose(fid); 
+%! assert (char(s'), testfile);
+%! delete __FPL3dxoutputmesh__test__.dx

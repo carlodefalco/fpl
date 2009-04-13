@@ -1,4 +1,4 @@
-## Copyright (C) 2004-2008  Carlo de Falco, Massimiliano Culpo
+## Copyright (C) 2004-2008,2009  Carlo de Falco, Massimiliano Culpo
 ##
 ##  This file is part of 
 ##
@@ -87,3 +87,11 @@ function filename = mktemp (direct,ext);
   endwhile
 
 endfunction
+
+%!test
+%! msh.p = [0 0; 1 0; 1 1; 0 1].';
+%! msh.t = [1 2 3 1; 1 3 4 1].';
+%! msh.e = [1 2 0 0 1 0 1; 2 3 0 0 2 0 1; 3 4 0 0 3 0 1; 4 1 0 0 4 0 1].';
+%! FPL2pdeshowmesh (msh, "red");
+%! s = input ("do you see a red outlined square divided in two triangles (if you see an empty plot try ctrl-F)? (y/n): " ,"s");
+%! assert(s, "y")
