@@ -16,9 +16,7 @@
 
 
 ## -*- texinfo -*- 
-## @deftypefn {Function File} {} FPL2vtkoutputdata ( @var{filename}, @
-## @var{p}, @var{t}, @var{header}, @var{val_name}, @var{val_values}, @
-## [ @var{val_name}, @var{val_values}, ...])
+## @deftypefn {Function File} {} FPL2vtkoutputdata ( @var{filename}, @var{p}, @var{t}, @var{nodedata}, @var{celldata}, @var{header}, @var{vtkver})
 ##
 ## Save data in VTK ASCII format.
 ##
@@ -26,13 +24,17 @@
 ##  @item  @var{filename} = name of file to save into
 ##  @item  @var{p}, @var{t} = mesh node coordinates and connectivity
 ##  @item  @var{name} = name of a mesh variable
-##  @item  @var{data} = nodal or elemental values of the variable 
+##  @item  @var{nodedata}/@var{celldata} = node/cell centered data
+##  fields (2xNfields cell array), @var{*data}@{:,1@} = variable names;
+##  @var{*data}@{:,2@} = variable data;
+##  @item @var{header} comment to add in the file header
+##  @item @var{vtkver} format version (default is 3.0)
 ## @end itemize
 ##
 ## @seealso{FPL2dxoutputdata}
 ## @end deftypefn
 
-function FPL2vtkoutputdata (filename, p, t, header, varargin)
+function FPL2vtkoutputdata (filename, p, t, nodedata, celldata, header, vtkver)
 
   fid = fopen (filename, "w");
   if ( fid )
@@ -73,39 +75,43 @@ function FPL2vtkoutputdata (filename, p, t, header, varargin)
     fprintf (fid,"%d\n", 5*ones(Nelem,1));
 
     ## node data
-    nfields = rows(nodedata);
-    if nfields
-      fprintf (fid,"POINT_DATA %d\n", Nnodes);
-      for ifield = 1:nfields
-	V = nodedata {ifield, 2};
-	N = nodedata {ifield, 1};
-	if (isvector (V))
-	  fprintf (fid,"SCALARS %s double\nLOOKUP_TABLE default\n", N);
-	  fprintf (fid,"%g\n", V);
-	else
-	  V(:,3) = 0;
-	  fprintf (fid,"VECTORS %s double\nLOOKUP_TABLE default\n", N);
-	  fprintf (fid,"%g %g %g\n", V);
-	endif     
-      endfor
+    if (exist("nodedata"))
+      nfields = rows(nodedata);
+      if nfields
+	fprintf (fid,"POINT_DATA %d\n", Nnodes);
+	for ifield = 1:nfields
+	  V = nodedata {ifield, 2};
+	  N = nodedata {ifield, 1};
+	  if (isvector (V))
+	    fprintf (fid,"SCALARS %s double\nLOOKUP_TABLE default\n", N);
+	    fprintf (fid,"%g\n", V);
+	  else
+	    V(:,3) = 0;
+	    fprintf (fid,"VECTORS %s double\nLOOKUP_TABLE default\n", N);
+	    fprintf (fid,"%g %g %g\n", V);
+	  endif     
+	endfor
+      endif
     endif
 
     ## cell data
-    nfields = rows(celldata);
-    if nfields
-      fprintf (fid,"CELL_DATA %d\n", Nelem);
-      for ifield = 1:nfields
-	V = celldata {ifield, 2};
-	N = celldata {ifield, 1};
-	if (isvector (V))
-	  fprintf (fid,"SCALARS %s double\nLOOKUP_TABLE default\n", N);
-	  fprintf (fid,"%g\n", V);
-	else
-	  V(:,3) = 0;
-	  fprintf (fid,"VECTORS %s double\nLOOKUP_TABLE default\n", N);
-	  fprintf (fid,"%g %g %g\n", V);
-	endif
-      endfor
+    if (exist("celldata"))
+      nfields = rows(celldata);
+      if nfields
+	fprintf (fid,"CELL_DATA %d\n", Nelem);
+	for ifield = 1:nfields
+	  V = celldata {ifield, 2};
+	  N = celldata {ifield, 1};
+	  if (isvector (V))
+	    fprintf (fid,"SCALARS %s double\nLOOKUP_TABLE default\n", N);
+	    fprintf (fid,"%g\n", V);
+	  else
+	    V(:,3) = 0;
+	    fprintf (fid,"VECTORS %s double\nLOOKUP_TABLE default\n", N);
+	    fprintf (fid,"%g %g %g\n", V);
+	  endif
+	endfor
+      endif
     endif
 
     ## cleanup
@@ -115,3 +121,24 @@ function FPL2vtkoutputdata (filename, p, t, header, varargin)
   endif
 endfunction
 
+%!test
+%! msh.p =[ 0   0   0   0   1   1   1   1   2   2   2   2   3   3   3   3
+%!          0   1   2   3   0   1   2   3   0   1   2   3   0   1   2   3];
+%! msh.e =[1    5    9   13   14   15    4    8   12    1    2    3
+%!     5    9   13   14   15   16    8   12   16    2    3    4
+%!     0    0    0    0    0    0    0    0    0    0    0    0
+%!     0    0    0    0    0    0    0    0    0    0    0    0
+%!     1    1    1    2    2    2    3    3    3    4    4    4
+%!     0    0    0    0    0    0    0    0    0    0    0    0
+%!     1    1    1    1    1    1    1    1    1    1    1    1];
+%! msh.t =[ 1    2    3    5    6    7    9   10   11    1    2    3    5    6    7    9   10   11
+%!     5    6    7    9   10   11   13   14   15    6    7    8   10   11   12   14   15   16
+%!     6    7    8   10   11   12   14   15   16    2    3    4    6    7    8   10   11   12
+%!     1    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1];
+%! testfile = "# vtk DataFile Version 3.0\n\nASCII\nDATASET UNSTRUCTURED_GRID\nPOINTS 16 double\n0 0 0\n0 1 0\n0 2 0\n0 3 0\n1 0 0\n1 1 0\n1 2 0\n1 3 0\n2 0 0\n2 1 0\n2 2 0\n2 3 0\n3 0 0\n3 1 0\n3 2 0\n3 3 0\nCELLS 18 72\n3 0 4 5\n3 1 5 6\n3 2 6 7\n3 4 8 9\n3 5 9 10\n3 6 10 11\n3 8 12 13\n3 9 13 14\n3 10 14 15\n3 0 5 1\n3 1 6 2\n3 2 7 3\n3 4 9 5\n3 5 10 6\n3 6 11 7\n3 8 13 9\n3 9 14 10\n3 10 15 11\nCELL_TYPES 18 \n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\n5\nPOINT_DATA 16\nSCALARS u double\nLOOKUP_TABLE default\n0\n0\n0\n0\n1\n1\n1\n1\n2\n2\n2\n2\n3\n3\n3\n3\n";
+%! FPL2vtkoutputdata ("__FPL2vtkoutputdata__test__.vtk", msh.p, msh.t, {"u", msh.p(1,:).'}); 
+%! fid = fopen("__FPL2vtkoutputdata__test__.vtk","r"); 
+%! s = fread(fid);
+%! fclose(fid); 
+%! assert (char(s'), testfile);
+%! delete __FPL2vtkoutputdata__test__.vtk
