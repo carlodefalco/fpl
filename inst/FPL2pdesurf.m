@@ -59,7 +59,7 @@ function FPL2pdesurf(varargin)
     mesh = varargin{1};
     u = varargin{2};
     for ii=3:2:nargin
-      eval([ varargin{ii} " = """ varargin{ii+1} """" ]);
+      eval([ varargin{ii} " = """ varargin{ii+1} """;" ]);
     endfor
   else  
     keyboard ,error(["wrong number of parameters " num2str (nargin)])
