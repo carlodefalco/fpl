@@ -1,5 +1,7 @@
 FPL >> FEM Plotting
 Functions to save data in DX format
+  fpl_dx_write_field.m
+  fpl_dx_write_series.m
   FPL2dxappenddata          
   FPL2dxoutputdata
   FPL2dxoutputtimeseries
@@ -15,4 +17,5 @@ Functions to plot data
   FPL2pdequiver
   FPL2ptcquiver
 Functions to save data in VTK format
+  fpl_vtk_write_field.m
   FPL2vtkoutputdata
