@@ -35,7 +35,7 @@ function h = pdemesh (p, e, t, u)
   if (nargin < 3)
     error("pdemesh: wrong number of input parameters");
   elseif (nargin == 3)
-    u = zeros (1, columns (p))
+    u = zeros (1, columns (p));
   endif
 
   nel = columns (t);
