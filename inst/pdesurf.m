@@ -24,11 +24,11 @@
 ## Plot a 3D surface given node or element data on a triangular mesh.
 ## @var{p}, @var{t} are the mesh vertices and connectivity, @var{u} node or element data.
 ##
-## @seealso{} 
+## @seealso{fpl_dx_write_field, fpl_vtk_write_field} 
 ##
 ## @end deftypefn
 
-function pdesurf (p, t, u)
+function h = pdesurf (p, t, u)
 
   ## Check input
   if nargin!=3
@@ -49,9 +49,9 @@ function pdesurf (p, t, u)
     c  = colormap;
     uc = sum (u(t(1:3, :)), 1)/3;
     uc = floor ((rows (c)-1)*(uc - min (uc))/(max (uc) - min (uc))) + 1;
-    patch ('Faces', t(1:3, :)', 
-           'Vertices', [p(1,:)', p(2,:)', u], 
-           'FaceVertexCData', c(uc(:), :));
+    H = patch ('Faces', t(1:3, :)', 
+               'Vertices', [p(1,:)', p(2,:)', u], 
+               'FaceVertexCData', c(uc(:), :));
 ### triangle data
   elseif (numel (u) == nel)
     tri = reshape (1:3*nel, 3, [])';
@@ -61,10 +61,14 @@ function pdesurf (p, t, u)
     ## normalize data
     c  = colormap;
     uc = floor ((rows (c)-1)*(u - min (u))/(max (u) - min (u))) + 1;
-    patch ('Faces', tri, 
-           'Vertices', pt, 
-           'FaceVertexCData', c(uc(:), :), 
-           'FaceColor', 'flat');
+    H = patch ('Faces', tri, 
+               'Vertices', pt, 
+               'FaceVertexCData', c(uc(:), :), 
+               'FaceColor', 'flat');
+  endif
+  
+  if (nargout == 1)
+    h = H;
   endif
 
   if (hs)
