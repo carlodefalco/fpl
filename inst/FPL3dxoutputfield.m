@@ -52,7 +52,7 @@ function FPL3dxoutputfield(filename,meshfilename,dep,field,attr_name,attr_rank,a
   fid    = fopen (filename,"w");
   nnodes = size(field,1);
   
-  if ((attr_rank==0) & (min(size(field))==1))
+  if ((attr_rank==0) && (min(size(field))==1))
     fprintf(fid,"object ""%s.data""\nclass array type double rank 0 items %d data follows",attr_name,nnodes);
     fprintf(fid,"\n %e",field);
   else

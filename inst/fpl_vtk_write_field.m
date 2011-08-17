@@ -45,79 +45,82 @@
 ## Example:
 ## @example
 ## <generate msh1, node centered field nc1, cell centered field cc1>
-## fpl_vtk_write_field("example",msh1,@{nc1, "temperature"@},@
-## @{cc1, "density"@},0);
+## fpl_vtk_write_field ("example", msh1, @{nc1, "temperature"@}, @{cc1, "density"@}, 0);
 ## <generate msh2, node centered field nc2>
-## fpl_vtk_write_field("example",msh2,@{nc2, "temperature"@},@
-## @{@},1);
+## fpl_vtk_write_field ("example", msh2, @{nc2, "temperature"@}, @{@}, 1);
 ## @end example
 ## will generate a valid XML-VTK UnstructuredGrid file.
 ##
-## @seealso{fpl_dx_write_field, fpl_dx_write_series} 
+## @seealso{fpl_dx_write_field, fpl_dx_write_series, fpl_vtk_assemble_series} 
 ##
 ## @end deftypefn
 
-function fpl_vtk_write_field(basename,mesh,nodedata,celldata,endfile)
+function fpl_vtk_write_field (basename, mesh, nodedata, celldata, endfile)
 
   ## Check input
   if nargin!=5
-    error("fpl_vtk_write_field: wrong number of input");
+    error ("fpl_vtk_write_field: wrong number of input parameters");
   endif
 
-  if !ischar(basename)
-    error("fpl_vtk_write_field: basename should be a valid string");
-  elseif !( isstruct(mesh) )
-    error("fpl_vtk_write_field: mesh should be a valid structure");
-  elseif !(iscell(nodedata) && iscell(celldata))
-    error("fpl_vtk_write_field: nodedata and celldata should be a valid cells");
+  if (! ischar (basename))
+    error ("fpl_vtk_write_field: basename should be a string");
+  elseif (! isstruct (mesh))
+    error ("fpl_vtk_write_field: mesh should be a struct");
+  elseif (! (iscell (nodedata) && iscell (celldata)))
+    error ("fpl_vtk_write_field: nodedata and celldata should be cell arrays");
   endif
 
   filename = [basename ".vtu"];
 
-  if ! exist(filename,"file")
-    fid = fopen (filename,"w");
+  if (! exist (filename, "file"))
+    fid = fopen (filename, "w");
+
     ## Header
-    fprintf (fid,"<?xml version=""1.0""?>\n");
-    fprintf (fid,"<VTKFile type=""UnstructuredGrid"" version=""0.1"" byte_order=""LittleEndian"">\n");
-    fprintf (fid,"<UnstructuredGrid>\n");
+    fprintf (fid, "<?xml version=""1.0""?>\n");
+    fprintf (fid, "<VTKFile type=""UnstructuredGrid"" version=""0.1"" byte_order=""LittleEndian"">\n");
+    fprintf (fid, "<UnstructuredGrid>\n");
   else
+
     ## FIXME: the following should be performed in a cleaner way! Does a
     ## backward fgetl function exist?
 
     ## If file exist, check if it was already closed
-    fid = fopen (filename,"r");
-    fseek(fid,-10,SEEK_END);
-    tst = fgetl(fid);
-    if strcmp(tst,"</VTKFile>")
-      error("fpl_vtk_write_field: file %s exist and was already closed",filename);
+    fid = fopen (filename, "r");
+    fseek (fid, -10, SEEK_END);
+    tst = fgetl (fid);
+    if (strcmp (tst, "</VTKFile>"))
+      error ("fpl_vtk_write_field: file %s exist and was already closed", filename);
     endif
-    fclose(fid);
-    fid = fopen (filename,"a");
+    fclose (fid);
+    fid = fopen (filename, "a");
   endif    
 
   p   = mesh.p;
-  dim = rows(p); # 2D or 3D
+  dim = rows (p); # 2D or 3D
 
   if dim == 2
-    t = mesh.t(1:3,:);
+    t = mesh.t (1:3,:);
   elseif dim == 3
-    t = mesh.t(1:4,:);
+    t = mesh.t (1:4,:);
   else
-    error("fpl_vtk_write_field: neither 2D triangle nor 3D tetrahedral mesh");    
+    error ("fpl_vtk_write_field: neither 2D triangle nor 3D tetrahedral mesh");    
   endif
   
   t -= 1;
   
-  nnodes = columns(p);
-  nelems = columns(t);
+  nnodes = columns (p);
+  nelems = columns (t);
 
   ## Header for <Piece>
-  fprintf (fid,"<Piece NumberOfPoints=""%d"" NumberOfCells=""%d"">\n",nnodes,nelems);
+  fprintf (fid, "<Piece NumberOfPoints=""%d"" NumberOfCells=""%d"">\n", nnodes, nelems);
+
   ## Print grid
-  print_grid(fid,dim,p,nnodes,t,nelems);
-  ## Print PointData
-  print_data_points(fid,nodedata,nnodes)
-  print_cell_data  (fid,celldata,nelems)
+  print_grid (fid, dim, p, nnodes, t, nelems);
+
+  ## Print Data
+  print_data_points (fid, nodedata, nnodes)
+  print_cell_data  (fid, celldata, nelems)
+
   ## Footer for <Piece>
   fprintf (fid, "</Piece>\n");
 
@@ -132,7 +135,7 @@ function fpl_vtk_write_field(basename,mesh,nodedata,celldata,endfile)
 endfunction
 
 ## Print Points and Cells Data
-function print_grid(fid,dim,p,nnodes,t,nelems)
+function print_grid (fid, dim, p, nnodes, t, nelems)
   
   if dim == 2
     p      = [p; zeros(1,nnodes)];
@@ -142,11 +145,11 @@ function print_grid(fid,dim,p,nnodes,t,nelems)
   endif
   
   ## VTK-Points (mesh nodes)
-  fprintf (fid,"<Points>\n");
-  fprintf (fid,"<DataArray type=""Float64"" Name=""Array"" NumberOfComponents=""3"" format=""ascii"">\n");  
-  fprintf (fid,"%g %g %g\n", p);
-  fprintf (fid,"</DataArray>\n");
-  fprintf (fid,"</Points>\n");
+  fprintf (fid, "<Points>\n");
+  fprintf (fid, "<DataArray type=""Float64"" Name=""Array"" NumberOfComponents=""3"" format=""ascii"">\n");  
+  fprintf (fid, "%g %g %g\n", p);
+  fprintf (fid, "</DataArray>\n");
+  fprintf (fid, "</Points>\n");
 
   ## VTK-Cells (mesh elements)
   fprintf (fid, "<Cells>\n");
@@ -168,40 +171,40 @@ function print_grid(fid,dim,p,nnodes,t,nelems)
 endfunction
 
 ## Print DataPoints
-function print_data_points(fid,nodedata,nnodes)
+function print_data_points (fid, nodedata, nnodes)
   
   ## # of data to print in 
   ## <PointData> field
-  nvdata = size(nodedata,1);  
+  nvdata = size (nodedata, 1);  
   
   if (nvdata)
     fprintf (fid, "<PointData>\n");   
     for ii = 1:nvdata    
       data     = nodedata{ii,1};
       dataname = nodedata{ii,2};
-      nsamples = rows(data);
-      ncomp    = columns(data);
-      if nsamples != nnodes
-	error("fpl_vtk_write_field: wrong number of samples in <PointData> ""%s""",dataname);
+      nsamples = rows (data);
+      ncomp    = columns (data);
+      if (nsamples != nnodes)
+	error ("fpl_vtk_write_field: wrong number of samples in <PointData> ""%s""", dataname);
       endif
-      fprintf (fid,"<DataArray type=""Float32"" Name=""%s"" ",dataname);
-      fprintf (fid,"NumberOfComponents=""%d"" format=""ascii"">\n",ncomp);
+      fprintf (fid, "<DataArray type=""Float32"" Name=""%s"" ", dataname);
+      fprintf (fid, "NumberOfComponents=""%d"" format=""ascii"">\n", ncomp);
       for jj = 1:nsamples
-	fprintf (fid,"%g ",data(jj,:));
-	fprintf (fid,"\n");
+	fprintf (fid, "%g ", data(jj,:));
+	fprintf (fid, "\n");
       endfor
-      fprintf (fid,"</DataArray>\n"); 
+      fprintf (fid, "</DataArray>\n"); 
     endfor
     fprintf (fid, "</PointData>\n");
   endif
 
 endfunction
 
-function print_cell_data(fid,celldata,nelems)
+function print_cell_data (fid, celldata, nelems)
   
   ## # of data to print in 
   ## <CellData> field
-  nvdata = size(celldata,1); 
+  nvdata = size (celldata, 1); 
 
   if (nvdata)
     fprintf (fid, "<CellData>\n");
@@ -211,15 +214,15 @@ function print_cell_data(fid,celldata,nelems)
       nsamples = rows(data);
       ncomp    = columns(data);
       if nsamples != nelems
-	error("fpl_vtk_write_field: wrong number of samples in <CellData> ""%s""",dataname);
+	error ("fpl_vtk_write_field: wrong number of samples in <CellData> ""%s""", dataname);
       endif
-      fprintf (fid,"<DataArray type=""Float32"" Name=""%s"" ",dataname);
-      fprintf (fid,"NumberOfComponents=""%d"" format=""ascii"">\n",ncomp);
+      fprintf (fid, "<DataArray type=""Float32"" Name=""%s"" ", dataname);
+      fprintf (fid, "NumberOfComponents=""%d"" format=""ascii"">\n", ncomp);
       for jj = 1:nsamples
-	fprintf (fid,"%g ",data(jj,:));
-	fprintf (fid,"\n");
+	fprintf (fid, "%g ", data(jj,:));
+	fprintf (fid, "\n");
       endfor
-      fprintf (fid,"</DataArray>\n");
+      fprintf (fid, "</DataArray>\n");
     endfor
     fprintf (fid, "</CellData>\n"); 
   endif
