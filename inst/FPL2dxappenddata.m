@@ -63,7 +63,7 @@ function FPL2dxappenddata(filename,p,t,u,attr_name,attr_rank,attr_shape,endfile)
 
   fprintf(fid,'\nattribute "element type" string "triangles"\nattribute "ref" string "positions"\n\n');
 
-  if ((attr_rank==0) && (min(size(u))==1))
+  if ((attr_rank==0) & (min(size(u))==1))
     fprintf(fid,'object "%s.data"\nclass array type double rank 0 items %d data follows',attr_name,Nnodi);
 	    fprintf(fid,'\n %1.7e',u);
 		  else
