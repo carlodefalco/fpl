@@ -187,12 +187,12 @@ function print_data_points (fid, nodedata, nnodes)
       if (nsamples != nnodes)
 	error ("fpl_vtk_write_field: wrong number of samples in <PointData> ""%s""", dataname);
       endif
-      fprintf (fid, "<DataArray type=""Float32"" Name=""%s"" ", dataname);
+      fprintf (fid, "<DataArray type=""Float64"" Name=""%s"" ", dataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""ascii"">\n", ncomp);
-      for jj = 1:nsamples
-	fprintf (fid, "%g ", data(jj,:));
+%      for jj = 1:nsamples
+	fprintf (fid, "%g ", data);
 	fprintf (fid, "\n");
-      endfor
+%      endfor
       fprintf (fid, "</DataArray>\n"); 
     endfor
     fprintf (fid, "</PointData>\n");
@@ -216,12 +216,12 @@ function print_cell_data (fid, celldata, nelems)
       if nsamples != nelems
 	error ("fpl_vtk_write_field: wrong number of samples in <CellData> ""%s""", dataname);
       endif
-      fprintf (fid, "<DataArray type=""Float32"" Name=""%s"" ", dataname);
+      fprintf (fid, "<DataArray type=""Float64"" Name=""%s"" ", dataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""ascii"">\n", ncomp);
-      for jj = 1:nsamples
+%      for jj = 1:nsamples
 	fprintf (fid, "%g ", data(jj,:));
 	fprintf (fid, "\n");
-      endfor
+%      endfor
       fprintf (fid, "</DataArray>\n");
     endfor
     fprintf (fid, "</CellData>\n"); 
