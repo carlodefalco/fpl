@@ -9,4 +9,4 @@ Categories: Graphics
 Depends: octave ( >= 3.0.0 )
 License: GNU/GPL 
 SystemRequirements: 
-SVNRelease: 10821
+SVNRelease: 10822
