@@ -8,5 +8,4 @@ Description: Collection of routines to save data in different graphical formats.
 Categories: Graphics
 Depends: octave ( >= 3.0.0 )
 License: GNU/GPL 
-SystemRequirements: 
 SVNRelease: 10822
