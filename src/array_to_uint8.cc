@@ -23,8 +23,10 @@ Created: 2012-08-04
 #include <octave/oct.h>
 
 DEFUN_DLD(array_to_uint8,args,nargout,"\
-undocumented internal function\n\
-")
+-*- texinfo -*-\n\
+@deftypefn {Function File} [@var{out}] = array_to_uint8 (@var{in})\n\
+UNDOCUMENTED INTERNAL FUNCTION.\n\
+@end deftypefn")
 {
   octave_value_list retval;
   int nargin = args.length ();
