@@ -1,28 +1,10 @@
 FPL >> FEM Plotting
-Functions to save data in DX format
-  fpl_dx_write_field.m
-  fpl_dx_write_series.m
 Functions to save data in VTK format
   fpl_vtk_write_field.m
+  fpl_vtk_b64_write_field.m
   fpl_vtk_assemble_series.m 
   savevtk
   savevtkvector
 Pdetool compatible plotting functions
   pdesurf
   pdemesh
-Legacy DX export functions
-  FPL2dxappenddata          
-  FPL2dxoutputdata
-  FPL2dxoutputtimeseries
-  FPL3dxoutputmesh
-  FPL3dxoutputfield
-Legacy DX wrappers
-  FPL2pdeshowmesh
-  FPL2ptcshowmesh
-  FPL2pdesurf
-  FPL2ptcsurf
-  FPL2trspdesurf
-  FPL2trsptcsurf
-  FPL2pdequiver
-  FPL2ptcquiver
-  FPL2vtkoutputdata
