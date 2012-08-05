@@ -73,6 +73,12 @@ function fpl_vtk_b64_write_field (basename, mesh, nodedata, celldata, endfile)
     error ("fpl_vtk_b64_write_field: nodedata and celldata should be cell arrays");
   endif
 
+  if (! exist ("base64_encode", "builtin"))
+    warning ("fpl_vtk_b64_write_field: Octave >= 3.7 is required to save in binary format, your data will be saved as ascii");
+    fpl_vtk_write_field (basename, mesh, nodedata, celldata, endfile, true);
+    return;
+  endif
+
   filename = [basename ".vtu"];
 
   if (! exist (filename, "file"))
