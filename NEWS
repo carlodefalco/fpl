@@ -1,0 +1,13 @@
+Summary of important user-visible changes for dataframe 1.3.0:
+-------------------------------------------------------------------
+
+ * Old OpenDX based functions have been deprecated
+
+ * ASCII VTK Unstructured Grid (VTU) exporter has been speeded up via
+   code vectorization
+
+* A new function to write base64-encoded binary VTU files has been added
+  (requires Octave >= 3.7)
+
+* New functions to write ASCII structured grid VTK files have been added
+
