@@ -219,7 +219,7 @@ function print_cell_data (fid, celldata, nelems)
       fprintf (fid, "<DataArray type=""Float64"" Name=""%s"" ", dataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""ascii"">\n", ncomp);
 %      for jj = 1:nsamples
-	fprintf (fid, "%g ", data(jj,:));
+	fprintf (fid, "%g ", data);
 	fprintf (fid, "\n");
 %      endfor
       fprintf (fid, "</DataArray>\n");
