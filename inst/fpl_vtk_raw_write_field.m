@@ -21,7 +21,7 @@
 ##  author: Massimiliano Culpo <culpo _AT_ users.sourceforge.net>
 
 ## -*- texinfo -*-
-## @deftypefn {Function File} {} fpl_vtk_b64_write_field (@var{basename}, @
+## @deftypefn {Function File} {} fpl_vtk_raw_write_field (@var{basename}, @
 ## @var{mesh}, @var{nodedata},  @var{celldata})
 ## 
 ## Output data field in binary serial XML-VTK UnstructuredGrid format.
@@ -44,22 +44,22 @@
 ## Example:
 ## @example
 ## %% generate msh1, node centered field nc1, cell centered field cc1
-## fpl_vtk_b64_write_field ("example", msh1, @{nc1, "temperature"@}, @{cc1, "density"@});
+## fpl_vtk_raw_write_field ("example", msh1, @{nc1, "temperature"@}, @{cc1, "density"@});
 ## %% generate msh2, node centered field nc2
-## fpl_vtk_b64_write_field ("example", msh2, @{nc2, "temperature"@}, @{@});
+## fpl_vtk_raw_write_field ("example", msh2, @{nc2, "temperature"@}, @{@});
 ## @end example
 ##
-## The difference between @code{fpl_vtk_write_field} and @code{fpl_vtk_b64_write_field}
-## is that the former saves data in ASCII format while the latter uses base64-encoded 
-## binary format. To save data in un-encoded binary format use @code{fpl_vtk_raw_write_field}.
+## The difference between @code{fpl_vtk_write_field} and @code{fpl_vtk_raw_write_field}
+## is that the former saves data in ASCII format while the latter uses raw
+## binary format. To save data in b64-encoded binary format use @code{fpl_vtk_b64_write_field}.
 ##
 ## @seealso{fpl_dx_write_field, fpl_dx_write_series, @
 ##          fpl_vtk_assemble_series, fpl_vtk_write_field, @
-##          fpl_vtk_raw_write_field} 
+##          fpl_vtk_b64_write_field} 
 ##
 ## @end deftypefn
 
-function fpl_vtk_b64_write_field (basename, mesh, nodedata, celldata, endfile)
+function fpl_vtk_raw_write_field (basename, mesh, nodedata, celldata, endfile)
 
   ## Check input
   if (nargin != 4)
@@ -72,12 +72,6 @@ function fpl_vtk_b64_write_field (basename, mesh, nodedata, celldata, endfile)
     error ("fpl_vtk_b64_write_field: mesh should be a struct");
   elseif (! (iscell (nodedata) && iscell (celldata)))
     error ("fpl_vtk_b64_write_field: nodedata and celldata should be cell arrays");
-  endif
-
-  if (! exist ("base64_encode", "builtin"))
-    warning ("fpl_vtk_b64_write_field: Octave >= 3.7 is required to save in binary format, your data will be saved as ascii");
-    fpl_vtk_write_field (basename, mesh, nodedata, celldata, endfile, true);
-    return;
   endif
 
   filename = [basename ".vtu"];
@@ -98,7 +92,7 @@ function fpl_vtk_b64_write_field (basename, mesh, nodedata, celldata, endfile)
   endif    
 
   offset = 0;
-  data   = "";
+  data   = uint8([]);
 
   p   = mesh.p;
   dim = rows (p); # 2D or 3D
@@ -119,11 +113,11 @@ function fpl_vtk_b64_write_field (basename, mesh, nodedata, celldata, endfile)
   ## Piece 
   fprintf (fid, "    <Piece NumberOfPoints=""%d"" NumberOfCells=""%d"">\n", nnodes, nelems);
 
-  ## Encode data-sets
+  ## assemble data-sets
   [data, offset] = print_data_points (fid, nodedata, nnodes, data, offset);
-  [data, offset] = print_cell_data  (fid, celldata, nelems, data, offset);
+  [data, offset] = print_cell_data (fid, celldata, nelems, data, offset);
 
-  ## Encode mesh
+  ## assemble mesh data
   [data, offset] = print_grid (fid, dim, p, nnodes, t, nelems, data, offset);
 
   ## End Piece
@@ -133,8 +127,9 @@ function fpl_vtk_b64_write_field (basename, mesh, nodedata, celldata, endfile)
   fprintf (fid, "  </UnstructuredGrid>\n");
 
   ## Write data
-  fprintf (fid, "  <AppendedData encoding=""base64"">\n");
-  fprintf (fid, "_%s\n", data);
+  fprintf (fid, "  <AppendedData encoding=""raw"">\n");
+  fwrite (fid, "_");
+  fwrite (fid, data, "uint8");
   fprintf (fid, "  </AppendedData>>\n");
 
   ## End file
@@ -147,7 +142,7 @@ endfunction
 function [data, offset] = print_grid (fid, dim, p, nnodes, t, nelems, data, offset)
   
   if dim == 2
-    p      = [p; zeros(1,nnodes)];
+    p = [p; zeros(1,nnodes)];
     eltype = 5;
   else
     eltype = 10;
@@ -156,8 +151,8 @@ function [data, offset] = print_grid (fid, dim, p, nnodes, t, nelems, data, offs
   ## VTK-Points (mesh nodes)
   fprintf (fid, "    <Points>\n");
   fprintf (fid, "      <DataArray type=""Float64"" Name=""Array"" NumberOfComponents=""3"" format=""appended"" offset=""%d"" />\n", offset);  
-  newdata = array_to_uint8(p)(:); 
-  data = [data, base64_encode([array_to_uint8(int32 (numel (newdata)))(:); newdata])];
+  newdata = array_to_uint8 (p); 
+  data = [data, array_to_uint8(int32 (numel (newdata))), newdata];
   offset = numel (data);
 
   fprintf (fid, "    </Points>\n");
@@ -165,20 +160,20 @@ function [data, offset] = print_grid (fid, dim, p, nnodes, t, nelems, data, offs
   ## VTK-Cells (mesh elements)
   fprintf (fid, "    <Cells>\n");
   fprintf (fid, "      <DataArray type=""Int32"" Name=""connectivity"" format=""appended"" offset=""%d"" />\n", offset);
-  newdata = array_to_uint8(int32 (t))(:); 
-  data = [data, base64_encode([array_to_uint8(int32 (numel (newdata)))(:); newdata])];
+  newdata = array_to_uint8 (int32 (t)); 
+  data = [data, array_to_uint8(int32 (numel (newdata))), newdata];
   offset = numel (data);
 
   fprintf (fid, "      <DataArray type=""Int32"" Name=""offsets"" format=""appended"" offset=""%d"" />\n", offset);
   tmp = (dim+1):(dim+1):((dim+1)*nelems);
-  newdata = array_to_uint8(int32 (tmp))(:); 
-  data = [data, base64_encode([array_to_uint8(int32 (numel (newdata)))(:); newdata])];
+  newdata = array_to_uint8 (int32 (tmp));
+  data = [data, array_to_uint8(int32 (numel (newdata))), newdata];
   offset = numel (data);
 
   fprintf (fid, "      <DataArray type=""UInt8"" Name=""types"" format=""appended"" offset=""%d"" />\n", offset);
   tmp = eltype*ones(nelems,1);
-  newdata = array_to_uint8(uint8 (tmp))(:); 
-  data = [data, base64_encode([array_to_uint8(int32 (numel (newdata)))(:); newdata])];
+  newdata = array_to_uint8 (uint8 (tmp)); 
+  data = [data, array_to_uint8(int32 (numel (newdata))), newdata];
   offset = numel (data);
 
   fprintf (fid, "    </Cells>\n");
@@ -204,8 +199,8 @@ function [data, offset] = print_data_points (fid, nodedata, nnodes, data, offset
       endif
       fprintf (fid, "      <DataArray type=""Float64"" Name=""%s"" ", ndataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""appended"" offset=""%d"" />\n", ncomp, offset);
-      newdata = array_to_uint8(ndata.')(:); 
-      data = [data, base64_encode([array_to_uint8(int32 (numel (newdata)))(:); newdata])];
+      newdata = array_to_uint8 (ndata.'); 
+      data = [data, array_to_uint8(int32 (numel (newdata))), newdata];
       offset = numel (data);
     endfor
     fprintf (fid, "    </PointData>\n");
@@ -231,8 +226,8 @@ function [data, offset] = print_cell_data (fid, celldata, nelems, data, offset)
       endif
       fprintf (fid, "      <DataArray type=""Float64"" Name=""%s"" ", cdataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""appended"" offset=""%d"" />\n", ncomp, offset);
-      newdata = array_to_uint8(cdata.')(:);
-      data = [data, base64_encode([array_to_uint8(int32 (numel (newdata)))(:); newdata])];
+      newdata = array_to_uint8 (cdata.');
+      data = [data, array_to_uint8(int32 (numel (newdata))), newdata];
       offset = numel (data);
     endfor
     fprintf (fid, "    </CellData>\n"); 

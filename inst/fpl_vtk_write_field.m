@@ -5,7 +5,7 @@
 ##
 ##  FPL is free software; you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
-##  the Free Software Foundation; either version 2 of the License, or
+##  the Free Software Foundation; either version 3 of the License, or
 ##  (at your option) any later version.
 ##
 ##  FPL is distributed in the hope that it will be useful,
@@ -147,7 +147,7 @@ function print_grid (fid, dim, p, nnodes, t, nelems)
   ## VTK-Points (mesh nodes)
   fprintf (fid, "<Points>\n");
   fprintf (fid, "<DataArray type=""Float64"" Name=""Array"" NumberOfComponents=""3"" format=""ascii"">\n");  
-  fprintf (fid, "%g %g %g\n", p);
+  fprintf (fid, "%.17g %.17g %.17g\n", p);
   fprintf (fid, "</DataArray>\n");
   fprintf (fid, "</Points>\n");
 
@@ -189,10 +189,8 @@ function print_data_points (fid, nodedata, nnodes)
       endif
       fprintf (fid, "<DataArray type=""Float64"" Name=""%s"" ", dataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""ascii"">\n", ncomp);
-%      for jj = 1:nsamples
-	fprintf (fid, "%g ", data);
+	fprintf (fid, "%.17g ", data);
 	fprintf (fid, "\n");
-%      endfor
       fprintf (fid, "</DataArray>\n"); 
     endfor
     fprintf (fid, "</PointData>\n");
@@ -218,10 +216,8 @@ function print_cell_data (fid, celldata, nelems)
       endif
       fprintf (fid, "<DataArray type=""Float64"" Name=""%s"" ", dataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""ascii"">\n", ncomp);
-%      for jj = 1:nsamples
-	fprintf (fid, "%g ", data);
+	fprintf (fid, "%.17g ", data);
 	fprintf (fid, "\n");
-%      endfor
       fprintf (fid, "</DataArray>\n");
     endfor
     fprintf (fid, "</CellData>\n"); 
