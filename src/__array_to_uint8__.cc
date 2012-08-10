@@ -22,9 +22,9 @@ Created: 2012-08-04
 
 #include <octave/oct.h>
 
-DEFUN_DLD(array_to_uint8,args,nargout,"\
+DEFUN_DLD(__array_to_uint8__,args,nargout,"\
 -*- texinfo -*-\n\
-@deftypefn {Function File} [@var{out}] = array_to_uint8 (@var{in})\n\
+@deftypefn {Function File} [@var{out}] = __array_to_uint8__ (@var{in})\n\
 UNDOCUMENTED INTERNAL FUNCTION.\n\
 @end deftypefn")
 {

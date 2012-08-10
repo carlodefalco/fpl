@@ -1,9 +1,9 @@
-OCTFILES := array_to_uint8.oct
-
+OCTFILES := __array_to_uint8__.oct
+MKOCTFILE ?= mkoctfile
 all: $(OCTFILES)
 
 %.oct:  %.cc
-	mkoctfile $<
+	$(MKOCTFILE) $<
 
 clean:
 	-rm -f *.o core octave-core *.oct *~
