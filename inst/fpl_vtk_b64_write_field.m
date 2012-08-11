@@ -59,7 +59,7 @@
 ##
 ## @end deftypefn
 
-function fpl_vtk_b64_write_field (basename, mesh, nodedata, celldata, endfile)
+function fpl_vtk_b64_write_field (basename, mesh, nodedata, celldata)
 
   ## Check input
   if (nargin != 4)
@@ -76,7 +76,7 @@ function fpl_vtk_b64_write_field (basename, mesh, nodedata, celldata, endfile)
 
   if (! exist ("base64_encode", "builtin"))
     warning ("fpl_vtk_b64_write_field: Octave >= 3.7 is required to save in binary format, your data will be saved as ascii");
-    fpl_vtk_write_field (basename, mesh, nodedata, celldata, endfile, true);
+    fpl_vtk_write_field (basename, mesh, nodedata, celldata, true);
     return;
   endif
 
