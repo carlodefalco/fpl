@@ -151,8 +151,8 @@ function [data, offset] = print_grid (fid, dim, p, nnodes, t, nelems, data, offs
   ## VTK-Points (mesh nodes)
   fprintf (fid, "    <Points>\n");
   fprintf (fid, "      <DataArray type=""Float64"" Name=""Array"" NumberOfComponents=""3"" format=""appended"" offset=""%d"" />\n", offset);  
-  newdata = __array_to_uint8__ (p); 
-  data = [data, __array_to_uint8__(int32 (numel (newdata))), newdata];
+  newdata = typecast (p, 'uint8')(:); 
+  data = [data; typecast(int32 (numel (newdata)), 'uint8')(:); newdata];
   offset = numel (data);
 
   fprintf (fid, "    </Points>\n");
@@ -160,20 +160,20 @@ function [data, offset] = print_grid (fid, dim, p, nnodes, t, nelems, data, offs
   ## VTK-Cells (mesh elements)
   fprintf (fid, "    <Cells>\n");
   fprintf (fid, "      <DataArray type=""Int32"" Name=""connectivity"" format=""appended"" offset=""%d"" />\n", offset);
-  newdata = __array_to_uint8__ (int32 (t)); 
-  data = [data, __array_to_uint8__(int32 (numel (newdata))), newdata];
+  newdata = typecast (int32 (t), 'uint8')(:);
+  data = [data; typecast(int32 (numel (newdata)), 'uint8')(:); newdata];
   offset = numel (data);
 
   fprintf (fid, "      <DataArray type=""Int32"" Name=""offsets"" format=""appended"" offset=""%d"" />\n", offset);
   tmp = (dim+1):(dim+1):((dim+1)*nelems);
-  newdata = __array_to_uint8__ (int32 (tmp));
-  data = [data, __array_to_uint8__(int32 (numel (newdata))), newdata];
+  newdata = typecast (int32 (tmp), 'uint8')(:);
+  data = [data; typecast(int32 (numel (newdata)), 'uint8')(:); newdata];
   offset = numel (data);
 
   fprintf (fid, "      <DataArray type=""UInt8"" Name=""types"" format=""appended"" offset=""%d"" />\n", offset);
   tmp = eltype*ones(nelems,1);
-  newdata = __array_to_uint8__ (uint8 (tmp)); 
-  data = [data, __array_to_uint8__(int32 (numel (newdata))), newdata];
+  newdata = typecast (uint8 (tmp), 'uint8')(:);
+  data = [data; typecast(int32 (numel (newdata)), 'uint8')(:); newdata];
   offset = numel (data);
 
   fprintf (fid, "    </Cells>\n");
@@ -199,8 +199,8 @@ function [data, offset] = print_data_points (fid, nodedata, nnodes, data, offset
       endif
       fprintf (fid, "      <DataArray type=""Float64"" Name=""%s"" ", ndataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""appended"" offset=""%d"" />\n", ncomp, offset);
-      newdata = __array_to_uint8__ (ndata.'); 
-      data = [data, __array_to_uint8__(int32 (numel (newdata))), newdata];
+      newdata = typecast (ndata.', 'uint8')(:); 
+      data = [data; typecast(int32 (numel (newdata)), 'uint8')(:); newdata];
       offset = numel (data);
     endfor
     fprintf (fid, "    </PointData>\n");
@@ -226,8 +226,8 @@ function [data, offset] = print_cell_data (fid, celldata, nelems, data, offset)
       endif
       fprintf (fid, "      <DataArray type=""Float64"" Name=""%s"" ", cdataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""appended"" offset=""%d"" />\n", ncomp, offset);
-      newdata = __array_to_uint8__ (cdata.');
-      data = [data, __array_to_uint8__(int32 (numel (newdata))), newdata];
+      newdata = typecast (cdata.', 'uint8')(:);
+      data = [data; typecast(int32 (numel (newdata)), 'uint8')(:); newdata];
       offset = numel (data);
     endfor
     fprintf (fid, "    </CellData>\n"); 

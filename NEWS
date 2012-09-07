@@ -1,3 +1,9 @@
+Summary of important user-visible changes for fpl 1.3.2:
+-------------------------------------------------------------------
+
+ * raw/base64 vtk exporters have been rewritten in a more backward-compatible 
+   way. This should also make fpl easier to install.
+
 Summary of important user-visible changes for fpl 1.3.1:
 -------------------------------------------------------------------
 
