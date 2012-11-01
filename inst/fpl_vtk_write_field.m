@@ -189,7 +189,7 @@ function print_data_points (fid, nodedata, nnodes)
       endif
       fprintf (fid, "<DataArray type=""Float64"" Name=""%s"" ", dataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""ascii"">\n", ncomp);
-	fprintf (fid, "%.17g ", data);
+	fprintf (fid, "%.17g ", data.');
 	fprintf (fid, "\n");
       fprintf (fid, "</DataArray>\n"); 
     endfor
@@ -216,7 +216,7 @@ function print_cell_data (fid, celldata, nelems)
       endif
       fprintf (fid, "<DataArray type=""Float64"" Name=""%s"" ", dataname);
       fprintf (fid, "NumberOfComponents=""%d"" format=""ascii"">\n", ncomp);
-	fprintf (fid, "%.17g ", data);
+	fprintf (fid, "%.17g ", data.');
 	fprintf (fid, "\n");
       fprintf (fid, "</DataArray>\n");
     endfor
