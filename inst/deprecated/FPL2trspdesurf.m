@@ -49,7 +49,7 @@ function FPL2trspdesurf(varargin)
   seriesend = columns(varargin{3});
   dataname  = mktemp("/tmp",".dx");
   colorname = varargin{2};
-  FPL2dxoutputtimeseries(dataname, varargin{1}.p, varargin{1}.t, \
+  FPL2dxoutputtimeseries(dataname, varargin{1}.p, varargin{1}.t, ...
 			 varargin{3}, "dataseries", 0, 1, 1:seriesend);
 
   scriptname = mktemp("/tmp",".net");
