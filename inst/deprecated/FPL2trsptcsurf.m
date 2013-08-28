@@ -53,8 +53,8 @@ function FPL2trsptcsurf(varargin)
     seriesend = columns(varargin{ii+2});
     dataname  = mktemp("/tmp",".dx");
     colorname = varargin{ii+1};
-    FPL2dxoutputtimeseries(dataname, varargin{ii}.p, varargin{ii}.t, \
-			   varargin{ii+2}, "dataseries", 0, 1, \
+    FPL2dxoutputtimeseries(dataname, varargin{ii}.p, varargin{ii}.t, ...
+			   varargin{ii+2}, "dataseries", 0, 1, ...
 			   1:seriesend);
     datalist  = strcat(datalist, """", dataname ,"""");
     colorlist = strcat(colorlist, """", colorname, """");
