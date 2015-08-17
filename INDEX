@@ -6,9 +6,6 @@ functions to save data in VTK format
   fpl_vtk_assemble_series.m 
   savevtk
   savevtkvector
-functions to save data in OpenDX format
-  fpl_dx_write_field
-  fpl_dx_write_series
 pdetool compatible plotting functions
   pdesurf
   pdemesh
