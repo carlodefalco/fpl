@@ -36,8 +36,9 @@
 ## @end deftypefn
 
 
-function fpl_vtk_assemble_series (collection, basenanme, format, idx, time)
+function fpl_vtk_assemble_series (collection, basename, format, idx, time)
 
+  ntpoints = numel (time);
   fid = fopen (strcat (collection, ".pvd"), "w");
   
   ## Header
